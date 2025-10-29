@@ -14,7 +14,7 @@ const User = sequelize.define('User', {
         allowNull: false,
         validate: {
             notEmpty: true,
-            len: [56, 56] // Stellar addresses are exactly 56 characters
+           // len: [56, 56]
         }
     },
     email: {
@@ -25,6 +25,10 @@ const User = sequelize.define('User', {
             isEmail: true
         }
     },
+    	password: {
+		type: DataTypes.STRING(250),
+		allowNull: false
+	},
     first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,
@@ -55,7 +59,15 @@ const User = sequelize.define('User', {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW
-    }
+    },
+    reset_token:{
+		type: DataTypes.STRING(10),
+		allowNull: true
+	},
+	reset_token_expiration:{
+		type: DataTypes.DATE,
+		allowNull: true
+	}
 }, {
     tableName: 'users',
     timestamps: false
