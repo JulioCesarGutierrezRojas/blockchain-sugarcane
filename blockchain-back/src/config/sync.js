@@ -1,4 +1,5 @@
 const sequelize = require('../config/database')
+require('../models/associations')
 
 const connectToDatabase = async () => {
     try {
