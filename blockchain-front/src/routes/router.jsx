@@ -1,27 +1,27 @@
 import { Routes, Route } from "react-router-dom";
-import Navbar from "../components/navbar";
+import LandingPage from "../modules/Home";
+import RegisterForm from "../modules/RegisterForm";
+import CO2Result from "../modules/Result";
+import Dashboard from "../modules/Dashboard";
+import Marketplace from "../modules/Marketplace";
+import Explorer from "../modules/Explorer";
+import MainLayout from "../Layouts/MainLayout";
 
 const AppRouter = () => {
-  return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div className="flex flex-col items-center justify-center h-screen bg-light">
-              <h1 className="text-4xl font-bold text-primary mb-4">
-                ¡Bienvenida a Token CO₂ Caña! 🌿
-              </h1>
-              <p className="text-accent text-lg">
-                Tailwind y React Router están funcionando correctamente.
-              </p>
-            </div>
-          }
-        />
-      </Routes>
-    </>
-  );
+    return (
+        <>
+            <Routes>
+                <Route path="/" element={<MainLayout />}>
+                    <Route index element={<LandingPage />} />
+                    <Route path="registro" element={<RegisterForm />} />
+                    <Route path="resultado" element={<CO2Result />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="mercado" element={<Marketplace />} />
+                    <Route path="explorador" element={<Explorer />} />
+                </Route>
+            </Routes>
+        </>
+    );
 };
 
 export default AppRouter;
