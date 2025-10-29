@@ -2,7 +2,7 @@ process.loadEnvFile()
 const express = require('express')
 const cors = require('cors')
 
-
+const tokenRoutes = require('../routes/token.routes.js');
 
 const app = express()
 
@@ -12,10 +12,10 @@ app.use(cors({ origins: '*' }))
 app.use(express.json({ limit: '50mb' }))
 
 app.get('/', (request, response) => {
-  res.send('Blockchain Backend is running')
+  response.send('Blockchain Backend is running')
 })
 
-
+app.use('/api/token', tokenRoutes);
 
 module.exports = {
     app
