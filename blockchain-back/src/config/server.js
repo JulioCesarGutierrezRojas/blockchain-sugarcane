@@ -1,22 +1,19 @@
-process.loadEnvFile()
-const express = require('express')
-const cors = require('cors')
+process.loadEnvFile();
+const express = require('express');
+const cors = require('cors');
 
+const app = express();
+app.set('port', process.env.PORT || 3000);
 
+app.use(cors({ origin: '*' }));
+app.use(express.json({ limit: '50mb' }));
 
-const app = express()
+// Importar rutas de usuario
+const routes = require('../routes/routes');
+app.use('/api', routes);
 
-app.set('port', process.env.PORT || 3000)
+app.get('/', (req, res) => {
+    res.send('Blockchain Backend is running');
+});
 
-app.use(cors({ origins: '*' }))
-app.use(express.json({ limit: '50mb' }))
-
-app.get('/', (request, response) => {
-  res.send('Blockchain Backend is running')
-})
-
-
-
-module.exports = {
-    app
-}
+module.exports = { app };
