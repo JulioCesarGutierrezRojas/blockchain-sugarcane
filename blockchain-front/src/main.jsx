@@ -1,10 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
-import App from './App.jsx'
+import AppRouter from './routes/router.jsx'
+import { WalletProvider } from './contexts/WalletContext.jsx'
+import { AuthProvider } from './contexts/AuthContext.jsx'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AuthProvider>
+        <WalletProvider>
+          <AppRouter/>
+        </WalletProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
 )
