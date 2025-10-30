@@ -4,7 +4,7 @@ export default function CO2Result() {
     hectares_measured: 10.5,
     co2_captured_tons: 35.2721,
     calculation_method: "modelo fotosintético",
-    verification_status: "verified",
+    verification_status: "Activo",
   };
 
   return (
@@ -38,9 +38,9 @@ export default function CO2Result() {
 
         <p className="text-[var(--color-text-light)] mb-1">Estatus:</p>
         <span
-          className={`px-4 py-1 rounded-lg text-sm font-semibold ${calculation.verification_status === "verified"
-              ? "bg-[var(--color-success-bg)] text-[var(--color-success)]"
-              : "bg-[var(--color-warning-bg)] text-[var(--color-warning)]"
+          className={`px-4 py-1 rounded-lg text-sm font-semibold ${calculation.verification_status === "Activo"
+            ? "bg-[var(--color-success-bg)] text-[var(--color-success)]"
+            : "bg-[var(--color-warning-bg)] text-[var(--color-warning)]"
             }`}
         >
           {calculation.verification_status}
