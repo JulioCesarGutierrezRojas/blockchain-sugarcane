@@ -23,15 +23,17 @@ const login = async (email, password) => {
             return new ApiResponse(null, null, TypesResponse.WARNING, 'Credenciales invalidas', 400)
         }
 
-        const token = generarToken({ user_id: user.user_id, role: user.role })
+        const token = generarToken({ user_id: user.id, email: user.email })
 
         const loginData = {
             token,
             user: {
-                id: user.user_id,
-                name: user.name,
-                role: user.role,
-                email: user.email
+                id: user.id,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                stellar_address: user.stellar_address,
+                phone: user.phone
             }
         }
 
@@ -48,8 +50,8 @@ const logout = async (token) => {
             return new ApiResponse(null, null, TypesResponse.WARNING, 'Token es requerido para cerrar sesión', 400);
         }
 
-        addToBlacklist(token);
-        console.log('🚪 Token agregado a blacklist para logout');
+        // TODO: Implement token blacklist if needed
+        console.log('🚺 Usuario cerró sesión exitosamente');
         
         return new ApiResponse(null, null, TypesResponse.SUCCESS, 'Sesión cerrada exitosamente', 200);
     } catch (error) {

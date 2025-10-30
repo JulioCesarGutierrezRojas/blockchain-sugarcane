@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiService from '../services/apiService';
+import Swal from 'sweetalert2';
 
 export default function UserRegisterForm() {
   const navigate = useNavigate();
@@ -10,20 +12,51 @@ export default function UserRegisterForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    // Aquí irá la lógica de registro (axios/fetch)
-    console.log({
-      stellarAddress,
-      email,
-      password,
-      firstName,
-      lastName,
-      phone,
-    });
-    // Al registrar, podemos redirigir al login
-    navigate("/login");
+    setLoading(true);
+    
+    try {
+      const userData = {
+        stellar_address: stellarAddress || null,
+        email,
+        password,
+        first_name: firstName,
+        last_name: lastName,
+        phone: phone || null
+      };
+      
+      const result = await apiService.createUser(userData);
+      
+      if (result.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Cuenta creada exitosamente!',
+          text: 'Ahora puedes iniciar sesión con tu email y contraseña',
+          timer: 3000,
+          showConfirmButton: false
+        });
+        
+        navigate("/login");
+      } else {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error al crear la cuenta',
+          text: result.error.message || 'Ocurrió un error durante el registro'
+        });
+      }
+    } catch (error) {
+      console.error('Register error:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,16 +69,17 @@ export default function UserRegisterForm() {
 
         <form onSubmit={handleRegister} className="flex flex-col gap-5">
 
-          {/* Stellar Address */}
+          {/* Email */}
           <div className="flex flex-col text-left">
-            <label className="text-[var(--color-text-light)] text-sm mb-1">Stellar Address *</label>
+            <label className="text-[var(--color-text-light)] text-sm mb-1">Email *</label>
             <input
-              type="text"
-              value={stellarAddress}
-              onChange={(e) => setStellarAddress(e.target.value)}
-              placeholder="G... (56 caracteres)"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="correo@ejemplo.com"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               required
+              disabled={loading}
             />
           </div>
 
@@ -59,6 +93,7 @@ export default function UserRegisterForm() {
               placeholder="********"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               required
+              disabled={loading}
             />
           </div>
 
@@ -72,6 +107,7 @@ export default function UserRegisterForm() {
               placeholder="Tu nombre"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               required
+              disabled={loading}
             />
           </div>
 
@@ -85,38 +121,49 @@ export default function UserRegisterForm() {
               placeholder="Tu apellido"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               required
+              disabled={loading}
             />
           </div>
 
-          {/* Email */}
+          {/* Stellar Address - Optional */}
           <div className="flex flex-col text-left">
-            <label className="text-[var(--color-text-light)] text-sm mb-1">Email</label>
+            <label className="text-[var(--color-text-light)] text-sm mb-1">Stellar Address (Opcional)</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="correo@ejemplo.com"
+              type="text"
+              value={stellarAddress}
+              onChange={(e) => setStellarAddress(e.target.value)}
+              placeholder="G... (56 caracteres) - Puedes añadirlo después"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              disabled={loading}
             />
+            <small className="text-xs text-[var(--color-text-light)] mt-1">
+              Conecta tu wallet Freighter más tarde para asociar tu dirección Stellar
+            </small>
           </div>
 
           {/* Phone */}
           <div className="flex flex-col text-left">
-            <label className="text-[var(--color-text-light)] text-sm mb-1">Teléfono</label>
+            <label className="text-[var(--color-text-light)] text-sm mb-1">Teléfono (Opcional)</label>
             <input
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+52 123 456 7890"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+              disabled={loading}
             />
           </div>
 
           <button
             type="submit"
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] text-white font-semibold px-8 py-3 rounded-xl text-lg shadow-md transition-transform transform hover:scale-105"
+            className={`font-semibold px-8 py-3 rounded-xl text-lg shadow-md transition-transform ${
+              loading 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] text-white transform hover:scale-105'
+            }`}
+            disabled={loading}
           >
-            Crear cuenta
+            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
           </button>
         </form>
 

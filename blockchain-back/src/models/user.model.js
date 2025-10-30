@@ -11,18 +11,18 @@ const User = sequelize.define('User', {
     stellar_address: {
         type: DataTypes.STRING(56),
         unique: true,
-        allowNull: false,
+        allowNull: true,
         validate: {
-            notEmpty: true,
-           // len: [56, 56]
+            // len: [56, 56]
         }
     },
     email: {
         type: DataTypes.STRING(100),
         unique: true,
-        allowNull: true,
+        allowNull: false,
         validate: {
-            isEmail: true
+            isEmail: true,
+            notEmpty: true
         }
     },
     	password: {

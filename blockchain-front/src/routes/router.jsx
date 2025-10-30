@@ -8,6 +8,7 @@ import Marketplace from "../modules/Marketplace";
 import Explorer from "../modules/Explorer";
 import MainLayout from "../Layouts/MainLayout";
 import LoginForm from "../modules/LoginForm";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const AppRouter = () => {
     return (
@@ -17,8 +18,14 @@ const AppRouter = () => {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/registro-usuario" element={<UserRegisterForm />} />
 
-            {/* Rutas internas con MainLayout */}
-            <Route path="/" element={<MainLayout />}>
+            {/* Rutas protegidas con MainLayout */}
+            <Route 
+                path="/" 
+                element={
+                    <ProtectedRoute>
+                        <MainLayout />
+                    </ProtectedRoute>
+                }>
                 <Route path="registro" element={<RegisterForm />} /> {/* Cultivos */}
                 <Route path="resultado" element={<CO2Result />} />
                 <Route path="dashboard" element={<Dashboard />} />

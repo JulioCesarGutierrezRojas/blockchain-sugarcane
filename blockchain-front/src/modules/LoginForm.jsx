@@ -1,17 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '../contexts/AuthContext';
+import Swal from 'sweetalert2';
 
 export default function LoginForm() {
   const navigate = useNavigate();
-  const [stellarAddress, setStellarAddress] = useState("");
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Aquí iría la lógica de login (axios/fetch)
-    console.log("Stellar Address:", stellarAddress);
-    console.log("Password:", password);
-    navigate("/dashboard"); // Redirige a dashboard tras login
+    setLoading(true);
+    
+    try {
+      const result = await login(email, password);
+      
+      if (result.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Bienvenido!',
+          text: `Hola ${result.user.first_name}`,
+          timer: 2000,
+          showConfirmButton: false
+        });
+        
+        navigate("/dashboard");
+      } else {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error de autenticación',
+          text: result.error || 'Credenciales inválidas'
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,20 +51,21 @@ export default function LoginForm() {
       <div className="bg-white/50 backdrop-blur-sm rounded-3xl shadow-2xl p-8 sm:p-10 max-w-md w-full text-center">
         <h2 className="text-3xl font-bold text-[var(--color-primary)] mb-6">Iniciar sesión</h2>
         <p className="text-[var(--color-text-light)] mb-8">
-          Ingresa tu Stellar Address y contraseña para continuar
+          Ingresa tu email y contraseña para continuar
         </p>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
-          {/* Stellar Address */}
+          {/* Email */}
           <div className="flex flex-col text-left">
-            <label className="text-[var(--color-text-light)] text-sm mb-1">Stellar Address</label>
+            <label className="text-[var(--color-text-light)] text-sm mb-1">Email</label>
             <input
-              type="text"
-              value={stellarAddress}
-              onChange={(e) => setStellarAddress(e.target.value)}
-              placeholder="G... (56 caracteres)"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="usuario@ejemplo.com"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               required
+              disabled={loading}
             />
           </div>
 
@@ -46,14 +79,20 @@ export default function LoginForm() {
               placeholder="********"
               className="w-full p-3 border rounded-lg border-[var(--color-border)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
               required
+              disabled={loading}
             />
           </div>
 
           <button
             type="submit"
-            className="bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] text-white font-semibold px-8 py-3 rounded-xl text-lg shadow-md transition-transform transform hover:scale-105"
+            className={`font-semibold px-8 py-3 rounded-xl text-lg shadow-md transition-transform ${
+              loading 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)] text-white transform hover:scale-105'
+            }`}
+            disabled={loading}
           >
-            Iniciar sesión
+            {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </button>
         </form>
 

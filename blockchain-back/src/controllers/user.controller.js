@@ -6,31 +6,34 @@ const createUserController = async (req, res) => {
     try {
         const { stellar_address, email, password, first_name, last_name, phone } = req.body;
 
-        if (!stellar_address || !password || !first_name || !last_name) {
-            return res.status(400).json({ message: 'Faltan campos obligatorios: stellar_address, password, first_name o last_name' });
+        // Validar campos obligatorios: email, password, first_name, last_name
+        if (!email || !password || !first_name || !last_name) {
+            return res.status(400).json({ message: 'Faltan campos obligatorios: email, password, first_name o last_name' });
         }
 
-        const existingUser = await User.findOne({ where: { stellar_address } });
-        if (existingUser) {
-            return res.status(400).json({ message: 'El usuario con esta dirección Stellar ya existe' });
+        // Validar que el email no exista
+        const existingEmail = await User.findOne({ where: { email } });
+        if (existingEmail) {
+            return res.status(400).json({ message: 'El email ya está registrado' });
         }
 
-        if (email) {
-            const existingEmail = await User.findOne({ where: { email } });
-            if (existingEmail) {
-                return res.status(400).json({ message: 'El email ya está registrado' });
+        // Validar que la dirección Stellar no exista (si se proporciona)
+        if (stellar_address) {
+            const existingUser = await User.findOne({ where: { stellar_address } });
+            if (existingUser) {
+                return res.status(400).json({ message: 'El usuario con esta dirección Stellar ya existe' });
             }
         }
 
         const hashedPassword = await bcrypt.hashPassword(password);
 
         const newUser = await User.create({
-            stellar_address,
+            stellar_address: stellar_address || null,
             email,
             password: hashedPassword,
             first_name,
             last_name,
-            phone
+            phone: phone || null
         });
 
         return res.status(201).json({
