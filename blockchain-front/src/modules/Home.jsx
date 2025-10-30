@@ -1,4 +1,12 @@
-export default function LandingPage() {
+import { useNavigate } from "react-router-dom";
+
+export default function Home() {
+  const navigate = useNavigate();
+
+  const handleComenzar = () => {
+    navigate("/login"); // Navega a la pantalla de login
+  };
+
   return (
     <section className="relative min-h-screen flex flex-col justify-center items-center text-center bg-gradient-to-b from-[var(--color-primary-light)] via-[var(--color-background)] to-[var(--color-secondary-light)] overflow-hidden">
       
@@ -12,7 +20,10 @@ export default function LandingPage() {
           Transforma la captura de CO₂ de tus cultivos en créditos digitales de carbono.
           Un futuro sostenible comienza en el campo. 🌿
         </p>
-        <button className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-light)] text-white font-semibold px-8 py-4 rounded-xl text-lg shadow-md">
+        <button
+          onClick={handleComenzar}
+          className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary-light)] text-white font-semibold px-8 py-4 rounded-xl text-lg shadow-md transition-transform transform hover:scale-105"
+        >
           Comenzar
         </button>
       </div>
