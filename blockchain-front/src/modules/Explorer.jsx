@@ -2,7 +2,7 @@ export default function Explorer() {
   return (
     <div className="min-h-screen bg-[var(--color-background)] p-10">
       <h2 className="text-4xl font-bold text-[var(--color-primary)] mb-6 text-center">
-        Explorador de Transacciones 🔗
+        Explorador de Transacciones
       </h2>
       <div className="max-w-3xl mx-auto bg-[var(--color-surface)] shadow rounded-2xl p-6">
         <input

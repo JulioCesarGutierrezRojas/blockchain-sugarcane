@@ -2,7 +2,7 @@ export default function Marketplace() {
     return (
         <div className="p-10 bg-[var(--color-background)] min-h-screen">
             <h2 className="text-4xl font-bold text-[var(--color-primary)] mb-8 text-center">
-                Mercado de Créditos de Carbono 💸
+                Mercado de Créditos de Carbono
             </h2>
 
             <div className="grid grid-cols-3 gap-8">
